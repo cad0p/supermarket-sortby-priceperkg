@@ -12,7 +12,13 @@
 (function() {
     'use strict';
 
-    // Your code here...
+    // Render the popstate event listener useless by replacing it with a no-op
+    // This way going into a product page does not unsort the items
+    window.addEventListener("popstate", function(event) {
+        event.stopImmediatePropagation();
+    }, {
+        capture: true,
+    });
 
     // Get the divs that contain the product cards
     let productDivs = document.querySelectorAll("#pageMain > div.PageContent--1oxv91x.dBafYq > div > div > div > div > section.FilterData--digkuz.jTBNz > section.Content--ttviix.efTUXH > div.Listing--vkq6wb.dDQkdC > div");
@@ -41,15 +47,24 @@
     // Sort the divs by the price per kilo in ascending order
     productDivs.sort((a, b) => getPricePerKilo(a) - getPricePerKilo(b));
 
-    // Get the parent element of the divs
-    let parent = productDivs[0].parentElement;
+    // Save the sorted divs to a variable
+    let sortedDivs = productDivs;
 
-    // Remove the existing divs from the parent
-    parent.innerHTML = "";
+    // Define a function to append the sorted divs to the parent element
+    function appendSortedDivs() {
+        // Get the parent element of the divs
+        let parent = sortedDivs[0].parentElement;
 
-    // Append the sorted divs to the parent
-    for (let div of productDivs) {
-        parent.appendChild(div);
+        // Remove the existing divs from the parent
+        parent.innerHTML = "";
+
+        // Append the sorted divs to the parent
+        for (let div of sortedDivs) {
+            parent.appendChild(div);
+        }
     }
+
+    // Add an event listener to the window object to run the append function when the page is loaded
+    window.addEventListener("load", appendSortedDivs);
 
 })();
