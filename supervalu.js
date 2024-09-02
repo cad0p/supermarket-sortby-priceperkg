@@ -21,7 +21,7 @@
     });
 
     // Get the divs that contain the product cards
-    let productDivs = document.querySelectorAll("#pageMain > div.PageContent--1oxv91x.dBafYq > div > div > div > div > section.FilterData--digkuz.jTBNz > section.Content--ttviix.efTUXH > div.Listing--vkq6wb.dDQkdC > div");
+    let productDivs = document.querySelectorAll("#pageMain > div.PageContent--1oxv91x > div > div > div > div > section.FilterData--digkuz > section.Content--ttviix > div.Listing--vkq6wb > div");
 
     // Convert the NodeList to an array
     productDivs = Array.from(productDivs);
@@ -29,7 +29,7 @@
     // Define a function to extract the price per kilo from the span
     function getPricePerKilo(div) {
         // Get the span that contains the price per kilo
-        let span = div.querySelector("div.ProductCardPricing--t1f7no > span.ProductCardPriceInfo--1vvb8df.bKPoZB");
+        let span = div.querySelector("div.ProductCardPricing--t1f7no > span.ProductCardPriceInfo--1vvb8df");
 
         // Get the text content of the span
         let text = span.textContent;
