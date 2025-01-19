@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dunnes Stores sort by price per kg
 // @namespace    http://tampermonkey.net/
-// @version      2024-02-18
+// @version      2025-01-19
 // @description  try to take over the world!
 // @author       Pier Carlo Cadoppi
 // @match        https://www.dunnesstoresgrocery.com/sm/delivery/rsid/*/results*
@@ -62,24 +62,22 @@
     // Define a function to append the sorted divs and update display
     function appendSortedDivs() {
         let parent = sortedDivs[0].parentElement;
-  
-        // First, update all the price displays without touching the DOM structure
-        sortedDivs.forEach(div => {
-            let priceData = getPricePerKilo(div);
-            if (priceData.unit?.toLowerCase() === 'g' && priceData.originalSpan) {
-                console.log('Updating price display:', priceData);
-                // Use requestAnimationFrame to ensure DOM updates happen after the sort
-                requestAnimationFrame(() => {
-                    priceData.originalSpan.textContent = `€${priceData.price.toFixed(2)}/kg`;
-                });
-            }
-        });
-  
-        // Then update the DOM structure
         parent.innerHTML = "";
+  
+        // First append all divs
         for (let div of sortedDivs) {
             parent.appendChild(div);
         }
+
+        // Then update the displays after a small delay
+        setTimeout(() => {
+            sortedDivs.forEach(div => {
+                let priceData = getPricePerKilo(div);
+                if (priceData.unit?.toLowerCase() === 'g' && priceData.originalSpan) {
+                    priceData.originalSpan.textContent = `€${priceData.price.toFixed(2)}/kg`;
+                }
+            });
+        }, 100);
     }
   
     // Add an event listener to the window object to run the append function when the page is loaded
