@@ -27,22 +27,38 @@
   // Convert the NodeList to an array
   productDivs = Array.from(productDivs);
 
+  function convertToKgPrice(price, unit) {
+      switch(unit.toLowerCase()) {
+          case 'g': return price * 1000;
+          case 'kg': return price;
+          default: return price;
+      }
+  }
+
   // Define a function to extract the price per kilo from the span
   function getPricePerKilo(div) {
       // Get the span that contains the price per kilo
       let span = div.querySelector("article > div.ProductCardPricing--t1f7no > div > span");
+      let text = span?.textContent || "";
+      
+      if (!text) return Number.MAX_VALUE; // Empty prices go last
 
-      // Get the text content of the span
-      let text = span.textContent;
+      // Extract price and unit
+      let match = text.match(/€([\d.]+)\/(kg|g)/i);
+      if (!match) return Number.MAX_VALUE;
 
-      // Remove the euro sign and the slash
-      text = text.replace("€", "").replace("/", "");
+      let price = parseFloat(match[1]);
+      let unit = match[2];
 
-      // Convert the text to a number
-      let price = parseFloat(text);
+      // Convert to kg price
+      let kgPrice = convertToKgPrice(price, unit);
 
-      // Return the price
-      return price;
+    //   // Update display text if needed
+    //   if (unit.toLowerCase() === 'g') {
+    //       span.textContent = `€${kgPrice.toFixed(2)}/kg`;
+    //   }
+
+      return kgPrice;
   }
 
   // Sort the divs by the price per kilo in ascending order
